@@ -188,19 +188,47 @@ function AdminPage() {
     fetchBookings();
   };
 
+  // =========================
+  // LOGOUT
+  // =========================
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+
+    window.location.href = "/login";
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 md:px-6 md:py-20">
       <div className="mx-auto max-w-5xl">
         {/* HEADER */}
 
-        <div className="mb-14">
-          <p className="mb-4 text-lg font-semibold text-blue-600">
-            Admin Dashboard
-          </p>
+        <div className="mb-14 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="mb-4 text-lg font-semibold text-blue-600">
+              Admin Dashboard
+            </p>
 
-          <h1 className="text-3xl font-bold text-slate-900 md:text-5xl">
-            Termine verwalten
-          </h1>
+            <h1 className="text-3xl font-bold text-slate-900 md:text-5xl">
+              Termine verwalten
+            </h1>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="
+              rounded-2xl
+              bg-red-500
+              px-6
+              py-3
+              font-semibold
+              text-white
+              transition
+              hover:bg-red-600
+            "
+          >
+            Logout
+          </button>
         </div>
 
         {/* ADD SLOT */}
@@ -211,8 +239,6 @@ function AdminPage() {
           </h2>
 
           <div className="space-y-6">
-            {/* DATE */}
-
             <input
               type="date"
               value={date}
@@ -230,8 +256,6 @@ function AdminPage() {
               "
             />
 
-            {/* TIME */}
-
             <input
               type="time"
               value={time}
@@ -248,8 +272,6 @@ function AdminPage() {
                 focus:border-blue-600
               "
             />
-
-            {/* BUTTON */}
 
             <button
               onClick={handleAddSlot}
@@ -280,17 +302,7 @@ function AdminPage() {
 
           <div className="space-y-4">
             {slots.length === 0 && (
-              <div
-                className="
-                  rounded-2xl
-                  border
-                  border-dashed
-                  border-slate-300
-                  p-10
-                  text-center
-                  text-slate-500
-                "
-              >
+              <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
                 Keine Termine vorhanden.
               </div>
             )}
@@ -350,17 +362,7 @@ function AdminPage() {
 
           <div className="space-y-4">
             {bookings.length === 0 && (
-              <div
-                className="
-                  rounded-2xl
-                  border
-                  border-dashed
-                  border-slate-300
-                  p-10
-                  text-center
-                  text-slate-500
-                "
-              >
+              <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
                 Keine Buchungen vorhanden.
               </div>
             )}
@@ -392,8 +394,6 @@ function AdminPage() {
                   <p className="text-slate-600">📍 {booking.address}</p>
 
                   <p className="text-slate-600">💳 {booking.payment_method}</p>
-
-                  {/* STATUS */}
 
                   <div className="mt-4">
                     {booking.status === "confirmed" ? (
@@ -427,8 +427,6 @@ function AdminPage() {
                       </button>
                     )}
                   </div>
-
-                  {/* DELETE BUTTON */}
 
                   <button
                     onClick={() => handleDeleteBooking(booking.id)}
