@@ -125,7 +125,7 @@ function AdminPage() {
 
     setTime("");
 
-    await fetchSlots();
+    fetchSlots();
   };
 
   // =========================
@@ -141,12 +141,12 @@ function AdminPage() {
     if (error) {
       console.log(error);
 
-      alert(error.message);
+      alert("Fehler beim Löschen");
 
       return;
     }
 
-    await fetchSlots();
+    fetchSlots();
   };
 
   // =========================
@@ -171,14 +171,8 @@ function AdminPage() {
   };
 
   // =========================
-  // LOGOUT
+  // DELETE BOOKING
   // =========================
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-
-    window.location.href = "/login";
-  };
 
   const handleDeleteBooking = async (id: number) => {
     const { error } = await supabase.from("bookings").delete().eq("id", id);
@@ -195,41 +189,24 @@ function AdminPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-20">
+    <main className="min-h-screen bg-slate-50 px-4 py-10 md:px-6 md:py-20">
       <div className="mx-auto max-w-5xl">
         {/* HEADER */}
 
-        <div className="mb-14 flex items-center justify-between">
-          <div>
-            <p className="mb-4 text-lg font-semibold text-blue-600">
-              Admin Dashboard
-            </p>
+        <div className="mb-14">
+          <p className="mb-4 text-lg font-semibold text-blue-600">
+            Admin Dashboard
+          </p>
 
-            <h1 className="text-5xl font-bold text-slate-900">
-              Termine verwalten
-            </h1>
-          </div>
-
-          <button
-            onClick={handleLogout}
-            className="
-              rounded-2xl
-              bg-red-500
-              px-6
-              py-3
-              text-white
-              transition
-              hover:bg-red-600
-            "
-          >
-            Logout
-          </button>
+          <h1 className="text-3xl font-bold text-slate-900 md:text-5xl">
+            Termine verwalten
+          </h1>
         </div>
 
         {/* ADD SLOT */}
 
-        <div className="mb-14 rounded-[36px] bg-white p-10 shadow-sm">
-          <h2 className="mb-8 text-3xl font-semibold text-slate-900">
+        <div className="mb-14 rounded-[36px] bg-white p-6 shadow-sm md:p-10">
+          <h2 className="mb-8 text-2xl font-semibold text-slate-900 md:text-3xl">
             Neuen Termin hinzufügen
           </h2>
 
@@ -282,7 +259,7 @@ function AdminPage() {
                 rounded-2xl
                 bg-blue-600
                 py-5
-                text-2xl
+                text-xl
                 font-semibold
                 text-white
                 transition
@@ -296,8 +273,8 @@ function AdminPage() {
 
         {/* AVAILABLE SLOTS */}
 
-        <div className="rounded-[36px] bg-white p-10 shadow-sm">
-          <h2 className="mb-8 text-3xl font-semibold text-slate-900">
+        <div className="rounded-[36px] bg-white p-6 shadow-sm md:p-10">
+          <h2 className="mb-8 text-2xl font-semibold text-slate-900 md:text-3xl">
             Verfügbare Termine
           </h2>
 
@@ -366,8 +343,8 @@ function AdminPage() {
 
         {/* BOOKINGS */}
 
-        <div className="mt-14 rounded-[36px] bg-white p-10 shadow-sm">
-          <h2 className="mb-8 text-3xl font-semibold text-slate-900">
+        <div className="mt-14 rounded-[36px] bg-white p-6 shadow-sm md:p-10">
+          <h2 className="mb-8 text-2xl font-semibold text-slate-900 md:text-3xl">
             Gebuchte Termine
           </h2>
 
@@ -416,41 +393,59 @@ function AdminPage() {
 
                   <p className="text-slate-600">💳 {booking.payment_method}</p>
 
-                  {booking.status !== "confirmed" && (
-  <button
-    onClick={() => handleConfirmBooking(booking.id)}
-    className="
-      mt-4
-      rounded-xl
-      bg-green-500
-      px-4
-      py-2
-      text-white
-      transition
-      hover:bg-green-600
-    "
-  >
-    Bestätigen
-  </button>
-)}
+                  {/* STATUS */}
+
+                  <div className="mt-4">
+                    {booking.status === "confirmed" ? (
+                      <div
+                        className="
+                          inline-block
+                          rounded-xl
+                          bg-green-100
+                          px-4
+                          py-2
+                          font-semibold
+                          text-green-700
+                        "
+                      >
+                        Bestätigt
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => handleConfirmBooking(booking.id)}
+                        className="
+                          rounded-xl
+                          bg-blue-600
+                          px-4
+                          py-2
+                          font-semibold
+                          text-white
+                          hover:bg-blue-700
+                        "
+                      >
+                        Bestätigen
+                      </button>
+                    )}
                   </div>
-                  {booking.status !== "confirmed" && (
-                    <button
-                      onClick={() => handleConfirmBooking(booking.id)}
-                      className="
-                        mt-4
-                        rounded-xl
-                        bg-green-500
-                        px-4
-                        py-2
-                        text-white
-                        transition
-                        hover:bg-green-600
-                      "
-                    >
-                      Bestätigen
-                    </button>
-                  )}
+
+                  {/* DELETE BUTTON */}
+
+                  <button
+                    onClick={() => handleDeleteBooking(booking.id)}
+                    className="
+                      mt-4
+                      rounded-xl
+                      bg-red-100
+                      px-4
+                      py-2
+                      text-sm
+                      font-semibold
+                      text-red-700
+                      hover:bg-red-200
+                    "
+                  >
+                    Buchung löschen
+                  </button>
                 </div>
               </div>
             ))}
