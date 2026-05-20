@@ -180,6 +180,20 @@ function AdminPage() {
     window.location.href = "/login";
   };
 
+  const handleDeleteBooking = async (id: number) => {
+    const { error } = await supabase.from("bookings").delete().eq("id", id);
+
+    if (error) {
+      console.log(error);
+
+      alert("Fehler beim Löschen");
+
+      return;
+    }
+
+    fetchBookings();
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-20">
       <div className="mx-auto max-w-5xl">
@@ -402,27 +416,23 @@ function AdminPage() {
 
                   <p className="text-slate-600">💳 {booking.payment_method}</p>
 
-                  <div className="mt-4">
-                    {booking.status === "confirmed" ? (
-                      <div className="rounded-xl bg-green-100 px-4 py-2 text-green-700 font-semibold inline-block">
-                        Bestätigt
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => handleConfirmBooking(booking.id)}
-                        className="
-        rounded-xl
-        bg-blue-600
-        px-4
-        py-2
-        text-white
-        font-semibold
-        hover:bg-blue-700
-      "
-                      >
-                        Bestätigen
-                      </button>
-                    )}
+                  {booking.status !== "confirmed" && (
+  <button
+    onClick={() => handleConfirmBooking(booking.id)}
+    className="
+      mt-4
+      rounded-xl
+      bg-green-500
+      px-4
+      py-2
+      text-white
+      transition
+      hover:bg-green-600
+    "
+  >
+    Bestätigen
+  </button>
+)}
                   </div>
                   {booking.status !== "confirmed" && (
                     <button
